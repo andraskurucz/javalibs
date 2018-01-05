@@ -1,1 +1,1 @@
-include ':date'
+include ':date', ':app'
