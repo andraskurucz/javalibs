@@ -1,6 +1,5 @@
+apply from: '../versionCodes.gradle'
 apply plugin: 'com.android.library'
-
-def version = '1.0'
 
 android {
     compileSdkVersion 26
@@ -10,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 1
-        versionName "$version"
+        versionCode libsConfig.versionCode
+        versionName libsConfig.versionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

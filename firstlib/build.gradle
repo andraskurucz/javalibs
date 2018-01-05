@@ -1,4 +1,4 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: 'versionCodes.gradle'
 
 buildscript {
 
@@ -31,7 +31,7 @@ project('date') {
             aar(MavenPublication) {
                 groupId = group
                 artifactId = project.getName()
-                version = '1.0.0'
+                version = buildVersionNumber()
                 // Tell maven to prepare the generated "*.aar" file for publishing
                 artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
             }
@@ -43,9 +43,20 @@ project('date') {
     }
 }
 
+// Jenkins exposes the build number to Gradle in the an environment variable.
+// For local builds we put 'SNAPSHOT' as a version indentifier and
+// for artifactory uploads from the buildserver, we use the BUILD NUMBER.
+String buildVersionNumber() {
+    def versionSuffix = 'SNAPSHOT'
+    if (System.env.BUILD_NUMBER) {
+        versionSuffix = System.env.BUILD_NUMBER
+    }
+    return libsConfig.versionName + '-' + versionSuffix
+}
+
 artifactory {
     clientConfig.setIncludeEnvVars(true)
-    clientConfig.info.addEnvironmentProperty('test.adding.dynVar',new Date().toString())
+    clientConfig.info.addEnvironmentProperty('test.adding.dynVar', new Date().toString())
 
     contextUrl = 'http://localhost:8081/artifactory'
     publish {
